@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use DateTimeInterface;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +23,7 @@ class EventRequest extends FormRequest {
             //
             'title' => 'required|string|min:3|max:255',
             'summary' => 'nullable|string|max:255',
-            'start_datetime' => 'required|after:now',
+            'start_datetime' => 'required|date|after:now',
             'end_datetime' => 'required|date|after:start_datetime',
             'interval' => [
                 'required','string',
