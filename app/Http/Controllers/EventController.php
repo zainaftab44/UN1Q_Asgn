@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
-use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -90,7 +89,6 @@ class EventController extends Controller
         } catch (Exception $ex) {
             return redirect()->back()->withErrors(["error" => $ex->getMessage()]);
         }
-
     }
 
 }

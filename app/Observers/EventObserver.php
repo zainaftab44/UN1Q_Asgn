@@ -54,37 +54,6 @@ class EventObserver
      */
     public function updated(Event $event): void
     {
-        // if ($event->interval && $event->occurrence) {
-        //     switch ($event->interval) {
-        //         case 'daily':
-        //             $func = 'addDay';
-        //             break;
-        //         case 'monthly':
-        //             $func = 'addMonth';
-        //             break;
-        //     }
-        //     $start = Carbon::parse($event->start_datetime);
-        //     $end = Carbon::parse($event->end_datetime);
-        //     DB::beginTransaction();
-        //     try {
-        //         $occurrences = EventOccurrence::where('event_id','=',$event->id)->get();
-        //         foreach ($occurrences as $occurrence) {
-        //             if (!EventOccurrence::checkEventOverlapping($start->toDateTimeString(), $end->toDateTimeString())) {
-        //                 throw new EventOverlappingException();
-        //             }
-        //             $occurrence->update([
-        //                 'start_datetime' => $start->toDateTimeString(),
-        //                 'end_datetime' => $end->toDateTimeString(),
-        //             ]);
-        //             $start = $start->$func();
-        //             $end = $end->$func();
-        //         }
-        //         DB::commit();
-        //     } catch (\Exception $ex) {
-        //         DB::rollBack();
-        //         throw $ex;
-        //     }
-        // }
     }
 
     /**
