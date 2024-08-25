@@ -23,14 +23,14 @@ class EventRequest extends FormRequest {
         return [
             //
             'title' => 'required|string|min:3|max:255',
-            'summary' => 'string|max:255',
-            'start_datetime' => 'required|date|after:now',
-            'end_datetime' => 'required|date|after:start',
+            'summary' => 'nullable|string|max:255',
+            'start_datetime' => 'required|after:now',
+            'end_datetime' => 'required|date|after:start_datetime',
             'interval' => [
                 'required','string',
                 Rule::in(['daily',  'monthly']),
             ],
-            'occurrence' => 'required|integer'
+            'occurrence' => 'required|integer|max_digits:2'
         ];
     }
 }

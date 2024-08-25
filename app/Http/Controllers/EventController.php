@@ -17,12 +17,9 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $page = $request->get('page', 0);
-        $eventList = Event::all();
         try {
-            $page_count = ceil($eventList->count() / 5);
-            $page = min($page_count, $page);
-            return response()->json(['events' => $eventList->forPage($page, 5), 'pages' => $page_count], 200);
+            $page = $request->get('page', 0);
+            return response()->json(Event::getEventsPaginated($page), 200);
         } catch (Exception $ex) {
             return response()->json($ex);
         }
@@ -34,20 +31,16 @@ class EventController extends Controller
     public function create(EventRequest $request)
     {
         try {
-            DB::beginTransaction();
-            $event = Event::create($request->all());
-            DB::commit();
-            return response()->json($event, 200);
+            return response()->json(Event::createEvent($request->all()), 200);
         } catch (Exception $ex) {
-            DB::rollBack();
             return response()->json(['error' => $ex->getMessage()], $ex->getCode());
         }
     }
 
-    public function detail($event_id)
+    public function detail(Event $event)
     {
         try {
-            return response()->json(Event::findOrFail($event_id)->first(), 200);
+            return response()->json($event, 200);
         } catch (\Throwable $th) {
             return response()->json(["error" => "Event not found"], 404);
         }
@@ -64,9 +57,40 @@ class EventController extends Controller
         }
     }
 
-    public function delete($event_id)
+    public function delete(Event $event)
     {
-        Event::destroy($event_id);
+        $event->delete();
         return response(null, 200);
     }
+
+    public function home()
+    {
+        return view('events.index')->with('list', Event::getEventsPaginated());
+    }
+
+
+    public function new()
+    {
+        return view('events.new');
+    }
+    public function createNew(EventRequest $request)
+    {
+        try {
+            Event::createEvent($request->all());
+            return redirect(route('index'));
+        } catch (Exception $ex) {
+            return redirect()->back()->withErrors(["error" => $ex->getMessage()])->withInput();
+        }
+    }
+
+    public function event_detail(Event $event)
+    {
+        try {
+            return view('events.detail', compact('event'));
+        } catch (Exception $ex) {
+            return redirect()->back()->withErrors(["error" => $ex->getMessage()]);
+        }
+
+    }
+
 }

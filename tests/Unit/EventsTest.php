@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use Database\Factories\EventFactory;
-use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

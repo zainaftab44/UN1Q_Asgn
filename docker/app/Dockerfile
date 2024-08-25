@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     curl \
+    npm \
     && docker-php-ext-install zip pdo_mysql
 
 # Set working directory
@@ -25,3 +26,8 @@ COPY . .
 RUN composer install
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod 777 storage/logs/laravel.log
+
+# RUN npm run build
+
+EXPOSE 9000
