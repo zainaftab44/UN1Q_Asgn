@@ -3,18 +3,13 @@
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [EventController::class, 'home'])->name('index');
+Route::get('/', [EventController::class, 'event_home'])->name('event-index');
 
-Route::prefix('/event')->group(function () {
-    Route::get('/new', [EventController::class, 'new'])->name('new');
-    Route::post('/create-new', [EventController::class, 'createNew'])->name('create-new');
+Route::group(['prefix' => 'events'], function () {
+    Route::get('/new', [EventController::class, 'event_new'])->name('event-new');
+    Route::post('/create', [EventController::class, 'event_create'])->name('event-create-new');
     Route::get('/detail/{event}', [EventController::class, 'event_detail'])->name('event-detail');
+    Route::get('/update/{event}', [EventController::class, 'event_update'])->name('event-update');
+    Route::get('/delete/{event}', [EventController::class, 'event_delete'])->name('event-delete');
 });
 
-Route::prefix('/events')->group(function () {
-    Route::post('/create', [EventController::class, 'create'])->name('create-event');
-    Route::put('/update', [EventController::class, 'update'])->name('update-event');
-    Route::delete('/delete/{event}', [EventController::class, 'delete'])->name('delete-event');
-    Route::get('/detail/{event}', [EventController::class, 'detail'])->name('detail-event');
-    Route::get('', [EventController::class, 'index'])->name('events-index');
-});

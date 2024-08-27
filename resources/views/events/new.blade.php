@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="relative p-5 rounded-lg sm:max-w-xl sm:mx-auto bg-gray-700">
-    <form class="flex flex-col" id="new_event_form" method="POST" action="{{route('create-new')}}">
+    <form class="flex flex-col" id="new_event_form" method="POST" action="{{route('event-create-new')}}">
         @csrf
         <input
             class="bg-gray-100 text-gray-800 border-0 rounded-md p-2 mt-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
@@ -48,6 +48,15 @@
                 type="datetime-local" name="end_datetime" id="end_datetime"
                 value="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}" />
             @error('end_datetime')
+                <p class="text-red-500 text-sm block">{{ $message }}</p>
+            @enderror
+        </div>
+        <div class="row  mb-4 grid grid-cols-2">
+            <label for="until" class=" text-gray-50 font-bold">Until</label>
+            <input
+                class="flex justify-end  w-auto col-span-full bg-gray-100 text-gray-800 border-0 rounded-md p-2 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                type="datetime-local" name="until" id="until" value="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}" />
+            @error('until_datetime')
                 <p class="text-red-500 text-sm block">{{ $message }}</p>
             @enderror
         </div>

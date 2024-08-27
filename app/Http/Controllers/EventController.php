@@ -45,10 +45,10 @@ class EventController extends Controller
         }
     }
 
-    public function update(UpdateEventRequest $request)
+    public function update(Event $event, UpdateEventRequest $request)
     {
         try {
-            $event = Event::findOrFail($request->get('id'))->first();
+            // $event = Event::findOrFail($request->get('id'))->first();
             $event->update($request->only(['title', 'summary']));
             return response()->json($event, 200);
         } catch (Exception $ex) {
@@ -62,17 +62,16 @@ class EventController extends Controller
         return response(null, 200);
     }
 
-    public function home()
+    public function event_home()
     {
         return view('events.index')->with('list', Event::getEventsPaginated());
     }
 
-
-    public function new()
+    public function event_new()
     {
         return view('events.new');
     }
-    public function createNew(EventRequest $request)
+    public function event_create(EventRequest $request)
     {
         try {
             Event::createEvent($request->all());
@@ -86,6 +85,26 @@ class EventController extends Controller
     {
         try {
             return view('events.detail', compact('event'));
+        } catch (Exception $ex) {
+            return redirect()->back()->withErrors(["error" => $ex->getMessage()]);
+        }
+    }
+
+    public function event_delete(Event $event, UpdateEventRequest $request)
+    {
+        try {
+            $event->update($request->only(['title', 'summary']));
+            return redirect('event-index');
+        } catch (Exception $ex) {
+            return redirect()->back()->withErrors(["error" => $ex->getMessage()]);
+        }
+    }
+
+    public function event_update(Event $event)
+    {
+        try {
+            $event->update();
+            return redirect('event-index');
         } catch (Exception $ex) {
             return redirect()->back()->withErrors(["error" => $ex->getMessage()]);
         }

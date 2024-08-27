@@ -9,7 +9,7 @@
             <th class="border border-gray-200 px-4 py-2">Title</th>
             <th class="border border-gray-200 px-4 py-2">Summary</th>
             <th class="border border-gray-200 px-4 py-2">Interval</th>
-            <th class="border border-gray-200 px-4 py-2">Occurrences</th>
+            <th class="border border-gray-200 px-4 py-2">Until</th>
         </tr>
     </thead>
     <tbody>
@@ -23,7 +23,7 @@
                 <td class="border border-gray-200 px-4 py-2">{{$event->title}}</td>
                 <td class="border border-gray-200 px-4 py-2">{{$event->summary}}</td>
                 <td class="border border-gray-200 px-4 py-2">{{$event->interval}}</td>
-                <td class="border border-gray-200 px-4 py-2">{{$event->occurrence}}</td>
+                <td class="border border-gray-200 px-4 py-2">{{$event->until_datetime}}</td>
             </tr>
         @endforeach
     </tbody>

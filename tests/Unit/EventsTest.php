@@ -10,14 +10,11 @@ class EventsTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic unit test example.
-     */
     public function test_create_daily_event()
     {
         $event = EventFactory::new(['interval' => 'daily'])->raw();
 
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
         $this->assertDatabaseHas('events', $event);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
     }
@@ -26,7 +23,7 @@ class EventsTest extends TestCase
     {
         $event = EventFactory::new(['interval' => 'monthly'])->raw();
 
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
         $this->assertDatabaseHas('events', $event);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
     }
@@ -39,13 +36,13 @@ class EventsTest extends TestCase
             'start_datetime' => $start,
             'end_datetime' => $end,
         ])->raw();
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
 
         $event1 = EventFactory::new([
             'start_datetime' => $start,
             'end_datetime' => $end,
         ])->raw();
-        $this->postJson('/events/create', $event1)->assertStatus(403);
+        $this->postJson(route('create-event'), $event1)->assertStatus(403);
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
@@ -58,13 +55,13 @@ class EventsTest extends TestCase
             'start_datetime' => now()->addDay()->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHours(2)->toDateTimeString(),
         ])->raw();
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
 
         $event1 = EventFactory::new([
             'start_datetime' => now()->addDay()->subHour()->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHour()->toDateTimeString(),
         ])->raw();
-        $this->postJson('/events/create', $event1)->assertStatus(403);
+        $this->postJson(route('create-event'), $event1)->assertStatus(403);
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
@@ -79,14 +76,14 @@ class EventsTest extends TestCase
             'end_datetime' => now()->addDay()->addHours(2)->toDateTimeString(),
         ])->raw();
 
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
 
         $event1 = EventFactory::new([
             'start_datetime' => now()->addDay()->addHour()->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHours(3)->toDateTimeString(),
         ])->raw();
 
-        $this->postJson('/events/create', $event1)->assertStatus(403);
+        $this->postJson(route('create-event'), $event1)->assertStatus(403);
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
@@ -95,7 +92,7 @@ class EventsTest extends TestCase
     {
         $event = EventFactory::new(['interval' => 'weekly'])->raw();
 
-        $this->postJson('/events/create', $event)->assertStatus(422);
+        $this->postJson(route('create-event'), $event)->assertStatus(422);
         $this->assertDatabaseEmpty('events');
         $this->assertDatabaseEmpty('event_occurrences');
     }
@@ -104,7 +101,7 @@ class EventsTest extends TestCase
     {
         $event = EventFactory::new(['title' => null])->raw();
 
-        $this->postJson('/events/create', $event)->assertStatus(422);
+        $this->postJson(route('create-event'), $event)->assertStatus(422);
         $this->assertDatabaseMissing('events', $event);
     }
 
@@ -113,14 +110,14 @@ class EventsTest extends TestCase
 
         $event = EventFactory::new()->raw();
 
-        $created_resp = $this->postJson('/events/create', $event);
+        $created_resp = $this->postJson(route('create-event'), $event);
         $created_resp->assertStatus(200);
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseHas('events', $event);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
 
-        $this->getJson(sprintf('/events/detail/%s', $created_resp['id']))->assertJson(['title' => $event['title']]);
+        $this->getJson(route('detail-event', $created_resp['id']))->assertJson(['title' => $event['title']]);
     }
 
 
@@ -131,13 +128,13 @@ class EventsTest extends TestCase
             'start_datetime' => now()->addDay()->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHour()->toDateTimeString(),
         ])->raw();
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
 
         $event1 = EventFactory::new([
             'start_datetime' => now()->addDay()->addHours(2)->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHours(3)->toDateTimeString(),
         ])->raw();
-        $this->postJson('/events/create', $event1)->assertStatus(200);
+        $this->postJson(route('create-event'), $event1)->assertStatus(200);
 
 
         $this->assertDatabaseCount('events', 2);
@@ -149,14 +146,14 @@ class EventsTest extends TestCase
     {
 
         $event = EventFactory::new()->raw();
-        $created_resp = $this->postJson('/events/create', $event);
+        $created_resp = $this->postJson(route('create-event'), $event);
         $created_resp->assertStatus(200);
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseHas('events', $event);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
 
-        $this->deleteJson(sprintf('/events/delete/%s', $created_resp['id']))->assertStatus(200);
+        $this->deleteJson(route('delete-event', $created_resp['id']))->assertStatus(200);
 
         $this->assertDatabaseEmpty('events');
         $this->assertDatabaseEmpty('event_occurrences');
@@ -168,15 +165,14 @@ class EventsTest extends TestCase
     {
         $event = EventFactory::new()->raw();
 
-        $created_resp = $this->postJson('/events/create', $event);
+        $created_resp = $this->postJson(route('create-event'), $event);
         $created_resp->assertStatus(200);
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseHas('events', $event);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
 
-        $update_resp = $this->putJson('/events/update', [
-            'id' => $created_resp['id'],
+        $update_resp = $this->putJson(route('update-event', $created_resp['id']), [
             'title' => fake()->words(asText: true),
         ]);
         $update_resp->assertStatus(200);
@@ -189,12 +185,12 @@ class EventsTest extends TestCase
     {
         $event = EventFactory::new()->raw();
 
-        $this->postJson('/events/create', $event)->assertStatus(200);
+        $this->postJson(route('create-event'), $event)->assertStatus(200);
 
         $this->assertDatabaseHas('events', $event);
         $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
 
-        $this->getJson('/events')->assertJson(['pages' => 1])->assertJsonFragment(['title'=>$event['title']]);
+        $this->getJson(route('index-events'))->assertJson(['pages' => 1])->assertJsonFragment(['title' => $event['title']]);
     }
 
 }

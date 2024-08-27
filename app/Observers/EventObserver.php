@@ -16,7 +16,7 @@ class EventObserver
      */
     public function created(Event $event): void
     {
-        if ($event->interval && $event->occurrence) {
+        if ($event->interval && $event->until_datetime) {
             switch ($event->interval) {
                 case 'daily':
                     $func = 'addDay';
@@ -27,9 +27,11 @@ class EventObserver
             }
             $start = Carbon::parse($event->start_datetime);
             $end = Carbon::parse($event->end_datetime);
+            // $recurrences = $start->diff(Carbon::parse($event->until_datetime));
             DB::beginTransaction();
             try {
-                for ($i = 0; $i < $event->occurrence; $i++) {
+                // for ($i = 0; $i < $recurrences; $i++) {
+                while ($end < Carbon::parse($event->until_datetime)) {
                     if (!EventOccurrence::checkEventOverlapping($start->toDateTimeString(), $end->toDateTimeString())) {
                         throw new EventOverlappingException();
                     }

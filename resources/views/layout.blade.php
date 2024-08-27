@@ -25,7 +25,7 @@
                     </div>
                     <div class="justify-end">
                         <a title="New Event" class="group cursor-pointer outline-none hover:rotate-90 duration-300"
-                            href="{{route('new')}}">
+                            href="{{route('event-new')}}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24"
                                 class="stroke-zinc-700 fill-none group-hover:fill-zinc-800 group-active:stroke-zinc-200 group-active:fill-zinc-600 group-active:duration-0 duration-300">
                                 <path

@@ -18,6 +18,7 @@ class Event extends Model
         'end_datetime',
         'interval',
         'occurrence',
+        'until_datetime'
     ];
 
     public function occurrences()

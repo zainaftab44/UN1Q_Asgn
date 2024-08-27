@@ -23,7 +23,6 @@ class UpdateEventRequest extends FormRequest
     {
         return [
             //
-            'id'=>'required|numeric',
             'title' => 'nullable|string|min:3|max:255',
             'summary' => 'nullable|string|max:255',
         ];

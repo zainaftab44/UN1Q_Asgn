@@ -5,11 +5,13 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class EventRequest extends FormRequest {
+class EventRequest extends FormRequest
+{
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool {
+    public function authorize(): bool
+    {
         return true;
     }
 
@@ -18,7 +20,8 @@ class EventRequest extends FormRequest {
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
             //
             'title' => 'required|string|min:3|max:255',
@@ -26,10 +29,12 @@ class EventRequest extends FormRequest {
             'start_datetime' => 'required|date|after:now',
             'end_datetime' => 'required|date|after:start_datetime',
             'interval' => [
-                'required','string',
-                Rule::in(['daily',  'monthly']),
+                'required',
+                'string',
+                Rule::in(['daily', 'monthly']),
             ],
-            'occurrence' => 'required|integer|max_digits:2'
+            'occurrence' => 'required|integer|max_digits:2',
+            'until_datetime' => 'required|date|after:end_datetime',
         ];
     }
 }
