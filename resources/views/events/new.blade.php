@@ -52,10 +52,11 @@
             @enderror
         </div>
         <div class="row  mb-4 grid grid-cols-2">
-            <label for="until" class=" text-gray-50 font-bold">Until</label>
+            <label for="until_datetime" class=" text-gray-50 font-bold">Until</label>
             <input
                 class="flex justify-end  w-auto col-span-full bg-gray-100 text-gray-800 border-0 rounded-md p-2 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                type="datetime-local" name="until" id="until" value="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}" />
+                type="datetime-local" name="until_datetime" id="until_datetime"
+                value="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}" />
             @error('until_datetime')
                 <p class="text-red-500 text-sm block">{{ $message }}</p>
             @enderror

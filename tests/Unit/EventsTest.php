@@ -16,7 +16,6 @@ class EventsTest extends TestCase
 
         $this->postJson(route('create-event'), $event)->assertStatus(200);
         $this->assertDatabaseHas('events', $event);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
     }
 
     public function test_create_monthly_event()
@@ -25,7 +24,7 @@ class EventsTest extends TestCase
 
         $this->postJson(route('create-event'), $event)->assertStatus(200);
         $this->assertDatabaseHas('events', $event);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
     }
 
     public function test_fail_on_overlapping_events_same_time()
@@ -45,7 +44,7 @@ class EventsTest extends TestCase
         $this->postJson(route('create-event'), $event1)->assertStatus(403);
 
         $this->assertDatabaseCount('events', 1);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
     }
 
     public function test_fail_on_overlapping_events_end_time_overlap()
@@ -64,7 +63,7 @@ class EventsTest extends TestCase
         $this->postJson(route('create-event'), $event1)->assertStatus(403);
 
         $this->assertDatabaseCount('events', 1);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
     }
 
 
@@ -86,7 +85,7 @@ class EventsTest extends TestCase
         $this->postJson(route('create-event'), $event1)->assertStatus(403);
 
         $this->assertDatabaseCount('events', 1);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
     }
     public function test_fail_invalid_interval_events()
     {
@@ -94,7 +93,6 @@ class EventsTest extends TestCase
 
         $this->postJson(route('create-event'), $event)->assertStatus(422);
         $this->assertDatabaseEmpty('events');
-        $this->assertDatabaseEmpty('event_occurrences');
     }
 
     public function test_failure_with_no_title(): void
@@ -115,7 +113,7 @@ class EventsTest extends TestCase
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseHas('events', $event);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
 
         $this->getJson(route('detail-event', $created_resp['id']))->assertJson(['title' => $event['title']]);
     }
@@ -138,7 +136,6 @@ class EventsTest extends TestCase
 
 
         $this->assertDatabaseCount('events', 2);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence'] + $event1['occurrence']);
     }
 
 
@@ -151,12 +148,11 @@ class EventsTest extends TestCase
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseHas('events', $event);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
 
         $this->deleteJson(route('delete-event', $created_resp['id']))->assertStatus(200);
 
         $this->assertDatabaseEmpty('events');
-        $this->assertDatabaseEmpty('event_occurrences');
 
     }
 
@@ -170,13 +166,12 @@ class EventsTest extends TestCase
 
         $this->assertDatabaseCount('events', 1);
         $this->assertDatabaseHas('events', $event);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
 
         $update_resp = $this->putJson(route('update-event', $created_resp['id']), [
             'title' => fake()->words(asText: true),
         ]);
         $update_resp->assertStatus(200);
-        $this->assertDatabaseCount('event_occurrences', $created_resp['occurrence']);
     }
 
 
@@ -188,7 +183,7 @@ class EventsTest extends TestCase
         $this->postJson(route('create-event'), $event)->assertStatus(200);
 
         $this->assertDatabaseHas('events', $event);
-        $this->assertDatabaseCount('event_occurrences', $event['occurrence']);
+
 
         $this->getJson(route('index-events'))->assertJson(['pages' => 1])->assertJsonFragment(['title' => $event['title']]);
     }

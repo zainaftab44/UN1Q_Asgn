@@ -75,7 +75,7 @@ class EventController extends Controller
     {
         try {
             Event::createEvent($request->all());
-            return redirect(route('index'));
+            return redirect(route('event-index'));
         } catch (Exception $ex) {
             return redirect()->back()->withErrors(["error" => $ex->getMessage()])->withInput();
         }

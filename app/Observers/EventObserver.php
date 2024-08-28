@@ -27,7 +27,6 @@ class EventObserver
             }
             $start = Carbon::parse($event->start_datetime);
             $end = Carbon::parse($event->end_datetime);
-            // $recurrences = $start->diff(Carbon::parse($event->until_datetime));
             DB::beginTransaction();
             try {
                 // for ($i = 0; $i < $recurrences; $i++) {
