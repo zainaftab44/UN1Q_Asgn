@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('events', function (Blueprint $table) {
             //
             $table->dateTime('until_datetime')->nullable();
+            $table->dropColumn('occurrence');
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('events', function (Blueprint $table) {
             //
             $table->dropColumn('until_datetime');
+            $table->integer('occurrence');
         });
     }
 };

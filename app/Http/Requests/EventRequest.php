@@ -3,7 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 
 class EventRequest extends FormRequest
 {
@@ -14,6 +17,7 @@ class EventRequest extends FormRequest
     {
         return true;
     }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -33,8 +37,19 @@ class EventRequest extends FormRequest
                 'string',
                 Rule::in(['daily', 'monthly']),
             ],
-            'occurrence' => 'required|integer|max_digits:2',
+            // 'occurrence' => 'required|integer|max_digits:2',
             'until_datetime' => 'required|date|after:end_datetime',
         ];
+    }
+
+
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors()
+            ], 422)
+        );
     }
 }

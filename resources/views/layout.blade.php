@@ -48,6 +48,20 @@
             </div>
         </div>
     </div>
+    <script>
+        function sendRequest(url, method, data, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.onload = function () {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 422) {
+                    callback(xhr.responseText);
+                } else {
+                    console.error('Error:', xhr.statusText);
+                }
+            };
+            xhr.send(data);
+        }
+    </script>
 </body>
 
 </html>

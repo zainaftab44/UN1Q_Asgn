@@ -20,17 +20,21 @@ class EventObserver
             switch ($event->interval) {
                 case 'daily':
                     $func = 'addDay';
+                    $diff = 'diffInDays';
                     break;
                 case 'monthly':
                     $func = 'addMonth';
+                    $diff = 'diffInMonths';
                     break;
             }
             $start = Carbon::parse($event->start_datetime);
             $end = Carbon::parse($event->end_datetime);
+            $until = Carbon::parse($event->until_datetime);
+            print_r($start->$diff());
             DB::beginTransaction();
             try {
                 // for ($i = 0; $i < $recurrences; $i++) {
-                while ($end < Carbon::parse($event->until_datetime)) {
+                while ($end < $until) {
                     if (!EventOccurrence::checkEventOverlapping($start->toDateTimeString(), $end->toDateTimeString())) {
                         throw new EventOverlappingException();
                     }

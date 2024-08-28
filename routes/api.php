@@ -1,16 +1,12 @@
 <?php
 
-use App\Http\Controllers\EventController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\EventsAPIController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'events'], function () {
-    Route::post('/create', [EventController::class, 'create'])->name('create-event');
-    Route::put('/update/{event}', [EventController::class, 'update'])->name('update-event');
-    Route::delete('/delete/{event}', [EventController::class, 'delete'])->name('delete-event');
-    Route::get('/detail/{event}', [EventController::class, 'detail'])->name('detail-event');
-    Route::get('', [EventController::class, 'index'])->name('index-events');
+Route::prefix('')->group(function () {
+    Route::post('/create-event', [EventsAPIController::class, 'create_event'])->name('create-event');
+    Route::post('/update/{event}', [EventsAPIController::class, 'update_event'])->name('update-event');
+    Route::delete('/delete/{event}', [EventsAPIController::class, 'delete_event'])->name('delete-event');
+    Route::get('/detail/{event}', [EventsAPIController::class, 'detail_event'])->name('detail-event');
+    Route::get('', [EventsAPIController::class, 'index'])->name('index-events');
 });
-
-// Route::api(['prefix' => 'events'], function () {
-// })->middleware('auth:sanctum');

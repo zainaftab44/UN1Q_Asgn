@@ -17,7 +17,7 @@ class Event extends Model
         'start_datetime',
         'end_datetime',
         'interval',
-        'occurrence',
+        // 'occurrence',
         'until_datetime'
     ];
 
