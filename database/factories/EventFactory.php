@@ -16,14 +16,12 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        // $occurrences = 10 + fake()->randomDigitNotZero();
         return [
             'title' => fake()->sentence(),
             'summary' => fake()->sentences(asText: true),
             'start_datetime' => now()->addDay()->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHour()->toDateTimeString(),
             'interval' => fake()->randomElement(['daily', 'monthly']),
-            // 'occurrence' => $occurrences,
             'until_datetime' => now()->addDays(10 + fake()->randomDigitNotZero())->toDateTimeString(),
         ];
     }

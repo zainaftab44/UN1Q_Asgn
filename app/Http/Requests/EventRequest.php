@@ -37,7 +37,6 @@ class EventRequest extends FormRequest
                 'string',
                 Rule::in(['daily', 'monthly']),
             ],
-            // 'occurrence' => 'required|integer|max_digits:2',
             'until_datetime' => 'required|date|after:end_datetime',
         ];
     }

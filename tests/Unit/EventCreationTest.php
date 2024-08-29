@@ -3,10 +3,12 @@
 namespace Tests\Unit;
 
 use Database\Factories\EventFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EventCreationTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic unit test example.
      */
@@ -76,8 +78,5 @@ class EventCreationTest extends TestCase
         $response->assertJsonFragment(['summary' => null]);
         $this->assertDatabaseHas('events', ['id' => $response['id']]);
     }
-
-
-
 
 }

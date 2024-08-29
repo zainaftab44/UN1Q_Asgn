@@ -17,7 +17,6 @@ class Event extends Model
         'start_datetime',
         'end_datetime',
         'interval',
-        // 'occurrence',
         'until_datetime'
     ];
 
@@ -28,10 +27,8 @@ class Event extends Model
 
     public static function getEventsPaginated($page = 0, $per_page = 5)
     {
-        $eventList = Event::all();
-        $page_count = ceil($eventList->count() / $per_page);
-        $page = min($page_count, $page);
-        return ['events' => $eventList->forPage($page, $per_page), 'pages' => $page_count];
+        $eventList = Event::paginate($per_page, ['*'], 'page', $page);
+        return ['events' => $eventList->items(), 'pages' => $eventList->lastPage()];
     }
 
     public static function createEvent($attributes)

@@ -29,7 +29,7 @@ class EventsAPIController
     public function create_event(EventRequest $request)
     {
         try {
-            return response()->json(Event::createEvent($request->all()), 200, ['Content-Type' => 'application/json']);
+            return response()->json(Event::createEvent($request->all()), 200);
         } catch (Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], $ex->getCode());
         }
@@ -51,11 +51,11 @@ class EventsAPIController
      * Update the specified resource in storage.
      */
     // UpdateEventRequest $request,
-    public function update_event(Event $event)
+    public function update_event(UpdateEventRequest $request, string $event_id)
     {
         try {
-            $request = UpdateEventRequest::capture();
-            $res = $event->update($request->only(['title', 'summary']));
+            $event = Event::findOrFail($event_id);
+            $res = $event->update($request->all());
             return response()->json(['message' => $res ? 'Event updated' : 'Failed to update event'], $res ? 200 : 400);
         } catch (Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], $ex->getCode());
