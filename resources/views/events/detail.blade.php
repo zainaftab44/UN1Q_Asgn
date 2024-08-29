@@ -51,6 +51,12 @@
             <td class="border border-gray-50 px-4 py-2">Interval</td>
             <td class="border border-gray-50 px-4 py-2">{{$event->interval}}</td>
         </tr>
+        <tr>
+            <td class="border border-gray-50 px-4 py-2">Until DateTime</td>
+            <td class="border border-gray-50 px-4 py-2">
+                {{(\Carbon\Carbon::parse($event->until_datetime))->format('Y-m-d H:i')}}
+            </td>
+        </tr>
     </tbody>
 </table>
 <table class="table-auto w-full border border-collapse border-black">
@@ -65,8 +71,12 @@
         @foreach ($event->occurrences as $occurrence)
             <tr class="bg-gray-50">
                 <td class="border border-gray-200 px-4 py-2">{{$occurrence->id}}</td>
-                <td class="border border-gray-200 px-4 py-2">{{$occurrence->start_datetime}}</td>
-                <td class="border border-gray-200 px-4 py-2">{{$occurrence->end_datetime}}</td>
+                <td class="border border-gray-200 px-4 py-2">
+                    {{(\Carbon\Carbon::parse($occurrence->start_datetime))->format('Y-m-d H:i')}}
+                </td>
+                <td class="border border-gray-200 px-4 py-2">
+                    {{(\Carbon\Carbon::parse($occurrence->end_datetime))->format('Y-m-d H:i')}}
+                </td>
             </tr>
         @endforeach
     </tbody>
@@ -102,6 +112,28 @@
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text" id="summary" name="summary">{{$event->summary}}</textarea>
                 </div>
+                <div class="mb-4">
+                    <label for="start_datetime" class="block text-gray-700 font-bold mb-2">Start DateTime</label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="datetime-local" name="start_datetime" id="start_datetime"
+                        value="{{ (\Carbon\Carbon::parse($event->start_datetime))->format('Y-m-d\TH:i')  }}" required />
+                </div>
+                <div class="mb-4">
+                    <label for="end_datetime" class="block text-gray-700 font-bold mb-2">End DateTime</label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="datetime-local" name="end_datetime" id="end_datetime"
+                        value="{{ (\Carbon\Carbon::parse($event->end_datetime))->format('Y-m-d\TH:i') }}" required />
+                </div>
+                <div class="mb-4">
+                    <label for="until_datetime" class="block text-gray-700 font-bold mb-2">Until DateTime</label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="datetime-local" name="until_datetime" id="until_datetime"
+                        value="{{ (\Carbon\Carbon::parse($event->until_datetime))->format('Y-m-d\TH:i') }}" required />
+                </div>
+                <p class="bg-red-200 my-4 p-4 text-gray-600 text-sm block rounded-md hidden" id="error-out"></p>
 
                 <div class="flex justify-end">
                     <button type="button"
@@ -132,10 +164,26 @@
     });
     document.getElementById('update-event-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        document.getElementById('error-out').classList.add('hidden');
+        document.getElementById('error-out').innerText = '';
+        document.getElementById('full-page-loader').classList.remove('hidden');
         const formData = new FormData(e.target);
         sendRequest('{{route('update-event', $event->id)}}', 'POST', formData, (response) => {
-            alert(JSON.parse(response)['message']);
-            window.location.href = '{{route('event-detail', $event->id)}}'
+            document.getElementById('full-page-loader').classList.add('hidden');
+            data = JSON.parse(response);
+            if (data['errors']) {
+                for (const key in data['errors']) {
+                    if (Object.prototype.hasOwnProperty.call(data['errors'], key)) {
+                        const error = data['errors'][key];
+                        document.getElementById('error-out').innerText += error + "\n";
+                    }
+                }
+                document.getElementById('error-out').classList.remove('hidden');
+            } else {
+                document.getElementById('error-out').classList.add('hidden');
+                window.location.href = '{{route('event-detail', $event->id)}}'
+            }
+
         })
     });
 

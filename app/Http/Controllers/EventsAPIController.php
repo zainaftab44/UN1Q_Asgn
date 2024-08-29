@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use Carbon\Carbon;
+use DB;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -50,14 +52,23 @@ class EventsAPIController
     /**
      * Update the specified resource in storage.
      */
-    // UpdateEventRequest $request,
     public function update_event(UpdateEventRequest $request, string $event_id)
     {
         try {
+            DB::beginTransaction();
             $event = Event::findOrFail($event_id);
-            $res = $event->update($request->all());
+            foreach ($request->all() as $key => $attr) {
+                if (in_array($key, array_keys($event->toArray()))) {
+                    if (in_array($key, ['start_datetime', 'end_datetime', 'until_datetime']))
+                        $attr = Carbon::parse($attr)->toDateTimeString();
+                    $event->$key = $attr;
+                }
+            }
+            $res = $event->update();
+            DB::commit();
             return response()->json(['message' => $res ? 'Event updated' : 'Failed to update event'], $res ? 200 : 400);
         } catch (Exception $ex) {
+            DB::rollBack();
             return response()->json(['error' => $ex->getMessage()], $ex->getCode());
         }
     }

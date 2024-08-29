@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\EventOverlappingException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,7 @@ class EventOccurrence extends Model
         'start_datetime',
         'end_datetime',
         'event_id',
+        // 'dirty'
     ];
 
     public static function checkEventOverlapping($start, $end): bool
@@ -22,7 +24,17 @@ class EventOccurrence extends Model
             ->get()
             ->first() === null;
     }
-
+    public static function createEventOccurrence($start, $end, $event_id)
+    {
+        if (!EventOccurrence::checkEventOverlapping($start->toDateTimeString(), $end->toDateTimeString())) {
+            throw new EventOverlappingException();
+        }
+        EventOccurrence::create([
+            'start_datetime' => $start->toDateTimeString(),
+            'end_datetime' => $end->toDateTimeString(),
+            'event_id' => $event_id,
+        ]);
+    }
     public function event()
     {
         return $this->belongsTo(Event::class);

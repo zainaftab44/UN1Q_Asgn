@@ -1,7 +1,10 @@
 @extends('layout')
 
 @section('content')
-<div class="relative p-5 rounded-lg sm:max-w-xl sm:mx-auto bg-blue-200 ">
+<h2
+    class="relative p-7 rounded-t-lg sm:max-w-xl sm:mx-auto  flex items-center justify-center font-semibold h-4 bg-slate-400">
+    Create Event</h2>
+<div class="relative px-5 pb-5 rounded-b-lg sm:max-w-xl sm:mx-auto bg-blue-200 ">
     <form class="flex flex-col" id="new-event-form" action="#">
         @csrf
         <input
@@ -40,17 +43,25 @@
         <button
             class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
             type="submit">Create</button>
-        <p class="bg-black mt-4 text-red-500 text-sm block rounded-md" id="error-out"></p>
+        <p class="bg-red-200 mt-4 p-4 text-gray-600 text-sm block rounded-md hidden" id="error-out"></p>
     </form>
 </div>
-
+<div id="new-loader" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="flex flex-row gap-2">
+        <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce"></div>
+        <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.3s]"></div>
+        <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.5s]"></div>
+    </div>
+</div>
 <script>
     document.getElementById('new-event-form').addEventListener('submit', function (event) {
         event.preventDefault();
+        document.getElementById('error-out').classList.add('hidden');
+        document.getElementById('new-loader').classList.remove('hidden');
         const formData = new FormData(this);
         sendRequest('{{route('create-event')}}', 'POST', formData, (response) => {
-            document.getElementById('error-out').innerText = '';
             data = JSON.parse(response);
+            document.getElementById('new-loader').classList.add('hidden');
             if (data['errors']) {
                 for (const key in data['errors']) {
                     if (Object.prototype.hasOwnProperty.call(data['errors'], key)) {
@@ -58,8 +69,10 @@
                         document.getElementById('error-out').innerText += error + "\n";
                     }
                 }
+                document.getElementById('error-out').classList.remove('hidden');
             } else {
-                window.location.href('{{route('event-index')}}');
+                document.getElementById('error-out').classList.add('hidden');
+                window.location.href = '{{route('event-index')}}';
             }
         })
     });

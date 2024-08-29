@@ -20,6 +20,7 @@ class Event extends Model
         'until_datetime'
     ];
 
+
     public function occurrences()
     {
         return $this->hasMany(EventOccurrence::class);

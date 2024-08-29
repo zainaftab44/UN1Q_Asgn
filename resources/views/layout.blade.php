@@ -67,6 +67,14 @@
                 </div>
             </nav>
         </header>
+        <div id="full-page-loader" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="flex flex-row gap-2">
+                <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce"></div>
+                <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.3s]"></div>
+                <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.5s]"></div>
+            </div>
+        </div>
+
         <div
             class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#d78f8b] selection:text-black">
             <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">

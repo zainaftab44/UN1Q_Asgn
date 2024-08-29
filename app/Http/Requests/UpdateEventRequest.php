@@ -27,10 +27,13 @@ class UpdateEventRequest extends FormRequest
             //
             'title' => 'nullable|string|min:3|max:255',
             'summary' => 'nullable|string|max:255',
+            'start_datetime' => 'nullable|date_format:"Y-m-d\TH:i"|after:now',
+            'end_datetime' => 'nullable|date_format:"Y-m-d\TH:i"|after:start_datetime',
+            'until_datetime' => 'nullable|date_format:"Y-m-d\TH:i"|after:end_datetime'
         ];
     }
 
-    
+
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
