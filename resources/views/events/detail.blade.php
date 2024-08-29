@@ -4,7 +4,8 @@
 <div class="grid grid-cols-2 bg-blue-200 text-black text-center rounded-t-lg text-lg p-4">
     <h3 class="flex lg:justify-end">Event Details</h3>
     <div class="flex lg:justify-end">
-        <a title="Update Event" class="group cursor-pointer" href="#" id="update-event">
+        <a class="group cursor-pointer from-gray-800 font-semibold transition-all duration-250 hover:from-[#331029] hover:to-[#310413]"
+            href="#" id="update-event">
             <svg class="h-8 w-8 text-black" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" />
@@ -12,13 +13,23 @@
                 <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
                 <line x1="16" y1="5" x2="19" y2="8" />
             </svg>
+
+            <span
+                class="absolute opacity-0 group-hover:opacity-100 group-hover:text-white group-hover:text-sm duration-500 w-max  group-hover:bg-black p-2 rounded-lg">
+                Edit Event
+            </span>
         </a>
-        <a title="Delete Event" class="group cursor-pointer" href="#" id="delete-event">
+        <a title="Delete Event"
+            class="group cursor-pointer from-gray-800 font-semibold transition-all duration-250 hover:from-[#331029] hover:to-[#310413]"
+            href="#" id="delete-event">
             <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-
+            <span
+                class="absolute opacity-0 group-hover:opacity-100 group-hover:text-white group-hover:text-sm duration-500 w-max  group-hover:bg-black p-2 rounded-lg">
+                Delete Event
+            </span>
         </a>
     </div>
 </div>
@@ -109,10 +120,11 @@
 <script>
     document.getElementById('delete-event').addEventListener('click', (e) => {
         e.preventDefault();
-        sendRequest('{{route('delete-event', $event->id)}}', 'DELETE', null, (response) => {
-            alert(JSON.parse(response)['message']);
-            window.location.href = '{{route('event-index')}}';
-        })
+        if (confirm('This is a irreversible action. Would you still like to continue?'))
+            sendRequest('{{route('delete-event', $event->id)}}', 'DELETE', null, (response) => {
+                alert(JSON.parse(response)['message']);
+                window.location.href = '{{route('event-index')}}';
+            })
     })
     document.getElementById('update-event').addEventListener('click', (e) => {
         e.preventDefault();

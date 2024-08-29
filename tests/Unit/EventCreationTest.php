@@ -17,17 +17,24 @@ class EventCreationTest extends TestCase
     {
         $event = EventFactory::new(['interval' => 'daily'])->raw();
 
-        $this->postJson(route('create-event'), $event)->assertStatus(200);
-        $this->assertDatabaseHas('events', $event);
+        $created_resp = $this->postJson(route('create-event'), $event);
+        $created_resp->assertStatus(200);
+     
+        $this->assertDatabaseCount('events', 1);
+        $this->assertDatabaseHas('events', $created_resp->json());
+        $this->assertDatabaseHas('events', ['interval' => 'daily']);
     }
 
     public function test_create_monthly_event()
     {
         $event = EventFactory::new(['interval' => 'monthly'])->raw();
 
-        $this->postJson(route('create-event'), $event)->assertStatus(200);
-        $this->assertDatabaseHas('events', $event);
 
+        $created_resp = $this->postJson(route('create-event'), $event);
+        $created_resp->assertStatus(200);
+        $this->assertDatabaseCount('events', 1);
+        $this->assertDatabaseHas('events', $created_resp->json());
+        $this->assertDatabaseHas('events', ['interval' => 'monthly']);
     }
 
 
@@ -38,21 +45,21 @@ class EventCreationTest extends TestCase
             'end_datetime' => now()->addDay()->addHour()->toDateTimeString(),
             'until_datetime' => now()->addDays(10)->addHour()->toDateTimeString(),
         ])->raw();
-        $response_event = $this->postJson(route('create-event'), $event);
-        $response_event->assertJsonFragment(['title' => $event['title']]);
-        $response_event->assertStatus(200);
+        $created_resp = $this->postJson(route('create-event'), $event);
+        $created_resp->assertJsonFragment(['title' => $event['title']]);
+        $created_resp->assertStatus(200);
 
         $event1 = EventFactory::new([
             'start_datetime' => now()->addDay()->addHours(2)->toDateTimeString(),
             'end_datetime' => now()->addDay()->addHours(3)->toDateTimeString(),
             'until_datetime' => now()->addDays(10)->addHours(4)->toDateTimeString(),
         ])->raw();
-        $response_event1 = $this->postJson(route('create-event'), $event1);
-        $response_event1->assertJsonFragment(['title' => $event1['title']]);
-        $response_event1->assertStatus(200);
+        $created_resp1 = $this->postJson(route('create-event'), $event1);
+        $created_resp1->assertJsonFragment(['title' => $event1['title']]);
+        $created_resp1->assertStatus(200);
 
-        $this->assertDatabaseHas('events', ['id' => $response_event->json('id')]);
-        $this->assertDatabaseHas('events', ['id' => $response_event1->json('id')]);
+        $this->assertDatabaseHas('events', $created_resp->json());
+        $this->assertDatabaseHas('events', $created_resp1->json());
     }
 
 

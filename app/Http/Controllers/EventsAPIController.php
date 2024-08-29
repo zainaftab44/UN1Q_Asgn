@@ -71,4 +71,16 @@ class EventsAPIController
         return response()->json(["message" => "Event deleted successfully"], 200);
     }
 
+    public function search_event(Request $request)
+    {
+        try {
+            $search_term = $request->all()['search_term'];
+            $events_list = Event::whereLike('title', '%' . $search_term . '%')
+                ->orWhereLike('summary', '%' . $search_term . '%')
+                ->groupBy(['id'])->get();
+            return response()->json(['events' => $events_list], 200);
+        } catch (Exception $ex) {
+            return response()->json(['message' => $ex->getMessage()], $ex->getCode());
+        }
+    }
 }

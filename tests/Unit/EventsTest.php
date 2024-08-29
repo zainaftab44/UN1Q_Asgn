@@ -23,7 +23,6 @@ class EventsTest extends TestCase
 
     public function test_delete_event(): void
     {
-
         $event = EventFactory::new()->raw();
         $created_resp = $this->postJson(route('create-event'), $event);
 
@@ -45,11 +44,33 @@ class EventsTest extends TestCase
         $update_data = [
             'title' => fake()->words(asText: true),
         ];
-        
+
         $update_resp = $this->postJson(route('update-event', $created_resp['id']), $update_data);
         $update_resp->assertJson(['message' => 'Event updated']);
 
         $response = $this->getJson(route('detail-event', $created_resp['id']));
+        $response->assertJsonFragment($update_data);
+    }
+
+
+    public function test_update_event_summary_only(): void
+    {
+        $event = EventFactory::new()->raw();
+        $created_resp = $this->postJson(route('create-event'), $event);
+
+        $this->assertDatabaseHas('events', $created_resp->json());
+
+        $update_data = [
+            'summary' => fake()->sentences(asText: true),
+        ];
+
+        $update_resp = $this->postJson(route('update-event', $created_resp['id']), $update_data);
+        $update_resp->assertJson(['message' => 'Event updated']);
+
+        $response = $this->getJson(route('detail-event', $created_resp['id']));
+        $this->assertEquals($created_resp->json()['title'], $response->json()['title']);
+        $this->assertNotEquals($created_resp->json()['summary'], $response->json()['summary']);
+        $this->assertEquals($update_data['summary'], $response->json()['summary']);
         $response->assertJsonFragment($update_data);
     }
 
