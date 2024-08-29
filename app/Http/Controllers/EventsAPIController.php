@@ -78,7 +78,7 @@ class EventsAPIController
             $events_list = Event::whereLike('title', '%' . $search_term . '%')
                 ->orWhereLike('summary', '%' . $search_term . '%')
                 ->groupBy(['id'])->get();
-            return response()->json(['events' => $events_list], 200);
+            return response()->json(['events' => $events_list ?? []], 200);
         } catch (Exception $ex) {
             return response()->json(['message' => $ex->getMessage()], $ex->getCode());
         }

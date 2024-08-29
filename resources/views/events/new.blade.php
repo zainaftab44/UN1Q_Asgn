@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<div class="relative p-5 rounded-lg sm:max-w-xl sm:mx-auto bg-gray-700">
+<div class="relative p-5 rounded-lg sm:max-w-xl sm:mx-auto bg-blue-200 ">
     <form class="flex flex-col" id="new-event-form" action="#">
         @csrf
         <input
@@ -17,21 +17,21 @@
             <option value="monthly">Monthly</option>
         </select>
         <div class="row  mb-4 grid grid-cols-2">
-            <label for="start_datetime" class="col text-gray-50 font-bold">Start Datetime</label>
+            <label for="start_datetime" class="col text-gray-700 font-bold">Start Datetime</label>
             <input
                 class="col flex justify-end  w-auto col-span-full bg-gray-100 text-gray-800 border-0 rounded-md p-2 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                 type="datetime-local" name="start_datetime" id="start_datetime"
                 value="{{ now()->addHour()->format('Y-m-d\TH:i')  }}" required />
         </div>
         <div class="row  mb-4 grid grid-cols-2">
-            <label for="end_datetime" class=" text-gray-50 font-bold">End Datetime</label>
+            <label for="end_datetime" class=" text-gray-700 font-bold">End Datetime</label>
             <input
                 class="flex justify-end  w-auto col-span-full bg-gray-100 text-gray-800 border-0 rounded-md p-2 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                 type="datetime-local" name="end_datetime" id="end_datetime"
                 value="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}" required />
         </div>
         <div class="row  mb-4 grid grid-cols-2">
-            <label for="until_datetime" class=" text-gray-50 font-bold">Until</label>
+            <label for="until_datetime" class=" text-gray-700 font-bold">Until</label>
             <input
                 class="flex justify-end  w-auto col-span-full bg-gray-100 text-gray-800 border-0 rounded-md p-2 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                 type="datetime-local" name="until_datetime" id="until_datetime"

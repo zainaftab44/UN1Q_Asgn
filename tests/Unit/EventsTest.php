@@ -87,4 +87,43 @@ class EventsTest extends TestCase
         $events_list->assertJsonFragment(['title' => $event['title']]);
     }
 
+
+    public function test_search_event_by_summary()
+    {
+        $event = EventFactory::new()->raw();
+        $created_resp = $this->postJson(route('create-event'), $event);
+
+        $this->assertDatabaseHas('events', ['id' => $created_resp['id']]);
+
+        $events_list = $this->getJson(route('search-event', ['search_term' => str_split($event['summary'])[4]]));
+        $events_list->assertJsonIsArray('events');
+        $events_list->assertJsonCount(1, 'events');
+        $events_list->assertJsonFragment(['title' => $event['title']]);
+    }
+
+    public function test_search_event_by_title()
+    {
+        $event = EventFactory::new()->raw();
+        $created_resp = $this->postJson(route('create-event'), $event);
+
+        $this->assertDatabaseHas('events', ['id' => $created_resp['id']]);
+
+        $events_list = $this->getJson(route('search-event', ['search_term' => str_split($event['title'])[2]]));
+        $events_list->assertJsonIsArray('events');
+        $events_list->assertJsonCount(1, 'events');
+        $events_list->assertJsonFragment(['title' => $event['title']]);
+    }
+
+    public function test_search_event_no_results_found()
+    {
+        $event = EventFactory::new()->raw();
+        $created_resp = $this->postJson(route('create-event'), $event);
+
+        $this->assertDatabaseHas('events', ['id' => $created_resp['id']]);
+
+        $events_list = $this->getJson(route('search-event', ['search_term' => 'Not Found Search term']));
+        $events_list->assertJsonIsArray('events');
+        $events_list->assertJsonCount(0, 'events');
+    }
+
 }

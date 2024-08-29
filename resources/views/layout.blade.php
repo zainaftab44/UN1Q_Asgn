@@ -14,19 +14,19 @@
 </head>
 
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-    <div class="bg-slate-300 text-black/50 dark:bg-black dark:text-white/50">
+    <div class="bg-slate-600 text-black/50 dark:bg-black dark:text-white/50">
         <header class="grid items-center gap-2 pb-10">
-            <nav class="bg-white border-b border-gray-200 py-4">
+            <nav class="bg-gray-800 border-b border-gray-200 text-gray-200 py-4">
                 <div class="grid grid-cols-2 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex flex-shrink-0 items-center">
                         <a href="{{route('event-index')}}">
-                            <h2 class="text-black text-bold">Events</h2>
+                            <h2 class="font-semibold">Events</h2>
                         </a>
                     </div>
                     <div class="flex items-center justify-end">
                         <div class="mx-3 flex items-center space-x-4">
                             <a href="{{route('event-index')}}"
-                                class="text-gray-700 hover:bg-gray-200 hover:text-blue-500 px-3 py-2 flex items-center rounded-md text-sm font-medium">
+                                class="hover:bg-gray-200 hover:text-blue-500 px-3 py-2 flex items-center rounded-md text-sm font-medium">
                                 <svg class="mx-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" />
@@ -39,7 +39,7 @@
                         </div>
                         <div class="mx-3 flex items-center space-x-4">
                             <a href="{{route('event-new')}}"
-                                class="text-gray-700 hover:bg-gray-200 hover:text-blue-500 px-3 py-2 flex items-center rounded-md text-sm font-medium">
+                                class="hover:bg-gray-200 hover:text-blue-500 px-3 py-2 flex items-center rounded-md text-sm font-medium">
                                 <svg class="mx-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" />
@@ -53,7 +53,7 @@
 
                         <div class="mx-3 flex items-center space-x-4">
                             <a href="#" id="search"
-                                class="text-gray-700 hover:bg-gray-200 hover:text-blue-500 px-3 py-2 flex items-center rounded-md text-sm font-medium">
+                                class="hover:bg-gray-200 hover:text-blue-500 px-3 py-2 flex items-center rounded-md text-sm font-medium">
                                 <svg class="mx-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" />
@@ -111,6 +111,9 @@
                         </button>
                     </form>
                 </div>
+                <p class="bg-teal-300 mt-4 p-4 text-black text-sm block rounded-md hidden"
+                    id="search-results-none-found">No
+                    results found.</p>
                 <div class="my-5 flex flex-row gap-2 items-center justify-center hidden" id="search-results-loader">
                     <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce"></div>
                     <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.3s]"></div>
@@ -142,10 +145,18 @@
         document.getElementById('search-form').addEventListener('submit', (e) => {
             e.preventDefault()
             document.getElementById('search-results-loader').classList.remove('hidden');
+            document.getElementById('search-results-none-found').classList.add('hidden');
+            document.getElementById('search-results-table').classList.add('hidden');
+
             sendRequest(`{{route('search-event')}}?search_term=${document.getElementById('search-term').value}`, 'GET', null, (response) => {
                 events = JSON.parse(response);
                 const tableBody = document.getElementById('search-results-table').querySelector('tbody');
                 tableBody.innerHTML = ''; // Clear existing rows
+                if (events['events'].length === 0) {
+                    document.getElementById('search-results-none-found').classList.remove('hidden');
+                    document.getElementById('search-results-loader').classList.add('hidden');
+                    return;
+                }
                 events['events'].forEach(event => {
                     const row = document.createElement('tr');
                     console.log(event)
