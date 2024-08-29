@@ -46,22 +46,15 @@
         <p class="bg-red-200 mt-4 p-4 text-gray-600 text-sm block rounded-md hidden" id="error-out"></p>
     </form>
 </div>
-<div id="new-loader" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="flex flex-row gap-2">
-        <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce"></div>
-        <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.3s]"></div>
-        <div class="w-4 h-4 rounded-full bg-red-500 animate-bounce [animation-delay:-.5s]"></div>
-    </div>
-</div>
 <script>
     document.getElementById('new-event-form').addEventListener('submit', function (event) {
         event.preventDefault();
         document.getElementById('error-out').classList.add('hidden');
-        document.getElementById('new-loader').classList.remove('hidden');
+        document.getElementById('full-page-loader').classList.remove('hidden');
         const formData = new FormData(this);
         sendRequest('{{route('create-event')}}', 'POST', formData, (response) => {
             data = JSON.parse(response);
-            document.getElementById('new-loader').classList.add('hidden');
+            document.getElementById('full-page-loader').classList.add('hidden');
             if (data['errors']) {
                 for (const key in data['errors']) {
                     if (Object.prototype.hasOwnProperty.call(data['errors'], key)) {

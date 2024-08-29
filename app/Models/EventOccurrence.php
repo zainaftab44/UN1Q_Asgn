@@ -13,7 +13,6 @@ class EventOccurrence extends Model
         'start_datetime',
         'end_datetime',
         'event_id',
-        // 'dirty'
     ];
 
     public static function checkEventOverlapping($start, $end): bool

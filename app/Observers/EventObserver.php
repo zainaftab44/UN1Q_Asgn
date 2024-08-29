@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Exceptions\EventOverlappingException;
 use App\Models\Event;
 use App\Models\EventOccurrence;
 use Carbon\Carbon;
@@ -88,7 +87,7 @@ class EventObserver
                     $end = $end->$func();
                 }
                 DB::commit();
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 DB::rollBack();
                 throw $ex;
             }
